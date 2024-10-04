@@ -75,7 +75,7 @@ function App() {
         .then(data => setColumns(data))
         .catch(error => console.error('Error:', error));
     }
-  }, [selectedFile]);
+  }, [selectedFile, selectedDataType]);
 
   // Fetch data for the selected column
   const handlePlot = () => {
