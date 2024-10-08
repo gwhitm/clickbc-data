@@ -2,6 +2,7 @@
   "name": "data-plotter",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://database.click-bc.com",
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -20,6 +21,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "flask": "python3 data_source.py",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -41,6 +43,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
   }
-  "homepage": "https://database.click-bc.com"
 }

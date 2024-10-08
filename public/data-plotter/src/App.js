@@ -51,7 +51,12 @@ function App() {
 
   // Fetch available data types
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/api/data-types')
+    fetch('https://list-data-types-o67swpv46a-uc.a.run.app', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
       .then(response => response.json())
       .then(data => setDataTypes(data))
       .catch(error => console.error('Error:', error));
@@ -60,7 +65,7 @@ function App() {
   // Fetch available CSV files when a data type is selected
   useEffect(() => {
     if (selectedDataType) {
-      fetch(`http://127.0.0.1:5000/api/csv-files?data_type=${selectedDataType}`)
+      fetch(`https://list-csv-files-o67swpv46a-uc.a.run.app?data_type=${selectedDataType}`)
         .then(response => response.json())
         .then(data => setCsvFiles(data))
         .catch(error => console.error('Error:', error));
@@ -70,21 +75,27 @@ function App() {
   // Fetch available columns when a CSV file is selected
   useEffect(() => {
     if (selectedFile) {
-      fetch(`http://127.0.0.1:5000/api/csv-columns?data_type=${selectedDataType}&filename=${selectedFile}`)
+      fetch(`https://list-csv-columns-o67swpv46a-uc.a.run.app?data_type=${selectedDataType}&filename=${selectedFile}`)
         .then(response => response.json())
-        .then(data => setColumns(data))
+        .then(data => {
+          setColumns(data);
+          setChartData(null); // Reset chart data when file changes
+        })
         .catch(error => console.error('Error:', error));
+    } else {
+      setColumns([]); // Clear columns if no file is selected
+      setChartData(null); // Reset chart data if no file is selected
     }
   }, [selectedFile, selectedDataType]);
 
   // Fetch data for the selected column
   const handlePlot = () => {
-    fetch(`http://127.0.0.1:5000/api/csv-data?data_type=${selectedDataType}&filename=${selectedFile}&column=timestamp_`)
+    fetch(`https://get-csv-data-o67swpv46a-uc.a.run.app?data_type=${selectedDataType}&filename=${selectedFile}&column=timestamp_`)
       .then(response => response.json())
       .then(timestamps => {
         // Fetch data for all selected columns
         const fetchDataPromises = selectedColumns.map((column) =>
-          fetch(`http://127.0.0.1:5000/api/csv-data?data_type=${selectedDataType}&filename=${selectedFile}&column=${column}`)
+          fetch(`https://get-csv-data-o67swpv46a-uc.a.run.app?data_type=${selectedDataType}&filename=${selectedFile}&column=${column}`)
             .then(response => response.json())
             .then(data => ({
               label: `${column} of ${selectedFile}`,
@@ -108,10 +119,21 @@ function App() {
       .catch(error => console.error('Error:', error));
   };
   
+    // Handle column selection change
+  const handleColumnChange = (newColumns) => {
+    setSelectedColumns(newColumns);
+    setChartData(null); // Reset chart data when columns change
+  };
+
+    // Handle file selection change
+    const handleFileChange = (newFile) => {
+      setSelectedFile(newFile);
+      setChartData(null); // Reset chart data when file changes
+    };
 
   return (
     <Container>
-      <h1>Data Plotter</h1>
+      <h1>CLICK A Data Explorer</h1>
       <FormControl fullWidth margin="normal">
         <InputLabel>Select Data Type</InputLabel>
         <Select value={selectedDataType} onChange={(e) => setSelectedDataType(e.target.value)}>
@@ -123,7 +145,7 @@ function App() {
       {selectedDataType && (
         <FormControl fullWidth margin="normal">
           <InputLabel>Select CSV File</InputLabel>
-          <Select value={selectedFile} onChange={(e) => setSelectedFile(e.target.value)}>
+          <Select value={selectedFile} onChange={(e) => handleFileChange(e.target.value)}>
             {Array.isArray(csvFiles) && csvFiles.map((file) => (
               <MenuItem key={file} value={file}>{file}</MenuItem>
             ))}
@@ -138,9 +160,9 @@ function App() {
           id="column-select"
           multiple
           value={selectedColumns}
-          onChange={(e) => setSelectedColumns(e.target.value)}
+          onChange={(e) => handleColumnChange(e.target.value)}
         >
-          {columns.map((column) => (
+          {Array.isArray(columns) && columns.map((column) => (
             <MenuItem key={column} value={column}>
               {column}
             </MenuItem>
@@ -210,6 +232,9 @@ function App() {
         Then scroll on the plot to zoom in and out in time, and drag to move forward and backward in time.<br />
           <Link href="https://docs.google.com/spreadsheets/d/10HQj-jQuXDAqirAgxsoBC6mmN-kF2k9iYRCzr5RGavg/edit?gid=0#gid=0" target="_blank" rel="noopener" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 'bold' }}>
             Link to all flyovers
+          </Link><br/>
+          <Link href="https://github.com/gwhitm/clickbc-data/tree/master/public/data-plotter/data-storage" target="_blank" rel="noopener" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 'bold' }}>
+            Link to downloadable data
           </Link>
       </Typography>
     </Container>

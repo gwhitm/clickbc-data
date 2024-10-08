@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Base directory containing the data
-BASE_DIR = './../public/data-storage'
+BASE_DIR = './data-storage'
 
 # Endpoint to get the list of data types (telem or fpga)
 @app.route('/api/data-types', methods=['GET'])
@@ -32,6 +32,7 @@ def list_csv_columns():
     data_type = request.args.get('data_type')
     filename = request.args.get('filename')
     file_path = os.path.join(BASE_DIR, data_type, filename)
+    
 
     if not os.path.exists(file_path):
         return jsonify({"error": "File not found"}), 404
