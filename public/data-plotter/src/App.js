@@ -233,7 +233,7 @@ function App() {
           <Link href="https://docs.google.com/spreadsheets/d/10HQj-jQuXDAqirAgxsoBC6mmN-kF2k9iYRCzr5RGavg/edit?gid=0#gid=0" target="_blank" rel="noopener" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 'bold' }}>
             Link to all flyovers
           </Link><br/>
-          <Link href="https://github.com/gwhitm/clickbc-data/tree/master/public/data-plotter/data-storage" target="_blank" rel="noopener" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 'bold' }}>
+          <Link href="https://github.com/gwhitm/clickbc-data/tree/master/public/clicka-data" target="_blank" rel="noopener" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 'bold' }}>
             Link to downloadable data
           </Link>
       </Typography>
